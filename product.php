@@ -12,26 +12,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['product_id'])) {
     $productIdPost = (int)$_POST['product_id'];
 
     $product = null;
-    foreach (getProducts() as $p) {
-        if ($p['ProductId'] == $productIdPost) {
+    foreach(getProducts() as $p){
+        if($p['ProductId'] == $productIdPost){
             $product = $p;
             break;
         }
     }
 
-    if ($product != null) {
+    if($product != null){
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
         }
-        if (isset($_SESSION['cart'][$productIdPost])) {
+        if(isset($_SESSION['cart'][$productIdPost]))
+        {
             $_SESSION['cart'][$productIdPost]['quantity'] += 1;
-        } else {
+        }
+        else {
             $_SESSION['cart'][$productIdPost] = [
                 'name' => $product['ProductName'],
                 'price' => $product['Price'],
                 'quantity' => 1
             ];
         }
+
     }
 }
 
@@ -70,29 +73,29 @@ if ($productId <= 0) {
         echo '<div class="container"><p class="text-center">Товар не найден.</p></div>';
     } else {
         $categoryName = getCategoryName($product['CategoryId']);
-?>
+        ?>
         <div class="container mt-5">
             <div class="row">
                 <div class="col-md-6">
                     <img src="" class="img-fluid"
-                        alt="<?php echo htmlspecialchars($product['ProductName']); ?>">
+                         alt="<?php echo htmlspecialchars($product['ProductName']); ?>">
                 </div>
                 <div class="col-md-6">
                     <h2><?php echo htmlspecialchars($product['ProductName']); ?></h2>
                     <p class="text-muted">Категория: <?php echo htmlspecialchars($categoryName); ?></p>
                     <p><strong>Цена:</strong> <?php echo htmlspecialchars(number_format($product['Price'], 2)); ?> руб.</p>
                     <p><strong>Описание:</strong> <?php echo htmlspecialchars($product['Description']); ?></p>
-                    <form method="POST" class="add-to-cart">
-                        <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['ProductId']); ?>">
-                        <button type="submit" class="btn btn-primary">Купить</button>
-                    </form>
+                      <form method="POST" action="product.php?id=<?php echo htmlspecialchars($productId); ?>">
+                         <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['ProductId']); ?>">
+                         <button type="submit" class="btn btn-primary">Купить</button>
+                       </form>
                 </div>
             </div>
             <div class="mt-4">
                 <h3>Комментарии</h3>
-                <?php if ($commentAdded) : ?>
-                    <p class="text-center">Комментарий успешно добавлен</p>
-                <?php endif; ?>
+                 <?php if($commentAdded) : ?>
+                     <p class="text-center">Комментарий успешно добавлен</p>
+                 <?php endif; ?>
                 <?php
                 // Вывод существующих комментариев
                 $sql = "SELECT ProductComments.CommentId, users.FIO, ProductComments.CommentText, ProductComments.CommentDate
@@ -107,23 +110,23 @@ if ($productId <= 0) {
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo '<div class="card mb-3">';
-                        echo '<div class="card-body">';
-                        echo '<h6 class="card-title">' . htmlspecialchars($row['FIO']) . ' <span class="text-muted small"> ' . htmlspecialchars($row['CommentDate']) . '</span></h6>';
-                        echo '<p class="card-text">' . htmlspecialchars($row['CommentText']) . '</p>';
-                        echo '</div>';
+                         echo '<div class="card mb-3">';
+                            echo '<div class="card-body">';
+                            echo '<h6 class="card-title">'. htmlspecialchars($row['FIO']) .' <span class="text-muted small"> '. htmlspecialchars($row['CommentDate']).'</span></h6>';
+                            echo '<p class="card-text">'. htmlspecialchars($row['CommentText']) .'</p>';
+                           echo '</div>';
                         echo '</div>';
                     }
-                } else {
-                    echo '<p>Нет комментариев.</p>';
-                }
+                  } else {
+                      echo '<p>Нет комментариев.</p>';
+                 }
 
                 $stmt->close();
                 ?>
 
                 <?php if (isset($_SESSION['userid'])) : ?>
                     <!-- Форма для добавления комментария -->
-                    <form method="POST" action="product.php?id=<?php echo htmlspecialchars($productId); ?>">
+                   <form method="POST" action="product.php?id=<?php echo htmlspecialchars($productId); ?>">
                         <div class="mb-3">
                             <label for="comment_text" class="form-label">Оставить комментарий:</label>
                             <textarea class="form-control" id="comment_text" name="comment_text" rows="3"></textarea>
@@ -135,7 +138,7 @@ if ($productId <= 0) {
                 <?php endif; ?>
             </div>
         </div>
-<?php
+        <?php
     }
 }
 
