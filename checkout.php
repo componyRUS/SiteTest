@@ -69,7 +69,7 @@ if (!isset($_SESSION['FIO'])) {
                                 </div>
                                 <div class="mb-3">
                                   <label for="userEmail" class="form-label">Email:</label>
-                                  <input type="email" class="form-control" id="userEmail" name="userEmail" value="<?php echo htmlspecialchars($_SESSION['userid']) ?>" required>
+                                  <input type="email" class="form-control" id="userEmail" name="userEmail" value="<?php echo htmlspecialchars($_SESSION['Email']) ?>" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="userPhone" class="form-label">Телефон:</label>

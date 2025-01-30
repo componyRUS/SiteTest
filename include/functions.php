@@ -3,7 +3,7 @@ require_once 'db_connect.php';
 
 function getProducts($search = '', $sort = '', $categoryFilter = 0) {
     global $conn;
-    $sql = "SELECT ProductId, ProductName, Price, Description, CategoryId, img1, img2, img3, img4 FROM Products WHERE 1=1";
+    $sql = "SELECT ProductId, ProductName, Price, Description, CategoryId, img1 FROM Products WHERE 1=1";
 
     if (!empty($search)) {
         $sql .= " AND ProductName LIKE ?";
@@ -12,7 +12,7 @@ function getProducts($search = '', $sort = '', $categoryFilter = 0) {
         $sql .= " AND CategoryId = ?";
     }
 
-     if ($sort == 'price_asc') {
+    if ($sort == 'price_asc') {
         $sql .= " ORDER BY Price ASC";
     } elseif ($sort == 'price_desc') {
         $sql .= " ORDER BY Price DESC";
@@ -29,7 +29,7 @@ function getProducts($search = '', $sort = '', $categoryFilter = 0) {
 
     $stmt = $conn->prepare($sql);
 
-    if (!empty($search) && $categoryFilter > 0) {
+   if (!empty($search) && $categoryFilter > 0) {
         $searchParam = "%" . $search . "%";
         $stmt->bind_param("si", $searchParam, $categoryFilter);
     }
@@ -42,8 +42,10 @@ function getProducts($search = '', $sort = '', $categoryFilter = 0) {
        }
 
 
-
-    $stmt->execute();
+    if(!$stmt->execute()){
+       error_log("Ошибка при выполнении запроса getProducts: " . $stmt->error);
+       return [];
+    }
     $result = $stmt->get_result();
     $products = [];
     while ($row = $result->fetch_assoc()) {
@@ -58,7 +60,10 @@ function getCategoryName($categoryId) {
     $sql = "SELECT CategoryName FROM Categories WHERE CategoryId = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $categoryId);
-    $stmt->execute();
+    if(!$stmt->execute()){
+        error_log("Ошибка при выполнении запроса getCategoryName: " . $stmt->error);
+         return 'Неизвестная категория';
+    }
     $result = $stmt->get_result();
     if ($row = $result->fetch_assoc()) {
         $categoryName = $row['CategoryName'];
@@ -68,14 +73,21 @@ function getCategoryName($categoryId) {
    $stmt->close();
     return $categoryName;
 }
-function getCategories(){
+
+function getCategories() {
     global $conn;
     $sql = "SELECT CategoryId, CategoryName FROM Categories";
-    $result = $conn->query($sql);
+     $stmt = $conn->prepare($sql);
+     if(!$stmt->execute()){
+        error_log("Ошибка при выполнении запроса getCategories: " . $stmt->error);
+          return [];
+    }
+    $result = $stmt->get_result();
     $categories = [];
-    while ($row = $result->fetch_assoc()) {
+     while ($row = $result->fetch_assoc()) {
         $categories[] = $row;
     }
+   $stmt->close();
     return $categories;
 }
 ?>

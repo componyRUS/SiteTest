@@ -32,8 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $uploadOk = 0;
         }
 
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-            echo "Ошибка: Разрешены только файлы JPG, JPEG, PNG и GIF.";
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+            echo "Ошибка: Разрешены только файлы JPG, JPEG и PNG.";
             $uploadOk = 0;
         }
 

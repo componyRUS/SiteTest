@@ -169,4 +169,21 @@ function deleteCategory($id) {
         return false;
     }
 }
+function authenticateUser($email, $password) {
+    global $conn;
+
+    $sql = "SELECT UserId, Email, role, Password FROM users WHERE Email = ?"; 
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['Password'])) {
+            return $user;
+        }
+    }
+    return false;
+}
 ?>

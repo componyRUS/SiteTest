@@ -16,6 +16,7 @@ if ($result->num_rows > 0) {
     if (password_verify($password, $row['Password'])) {
         // Успешная авторизация
         $_SESSION['FIO'] = $row['FIO']; // Сохраняем имя пользователя
+        $_SESSION['Email'] = $row['Email']; // Сохраняем имя пользователя
         $_SESSION['userid'] = $row['Userid']; //Сохраняем id пользователя
         echo "успешно"; // Важно: Выводим просто текст
     } else {

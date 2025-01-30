@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header("Location: login.php");
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -15,7 +25,7 @@
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <h2>Главная</h2>
-                <p>Добро пожаловать в админ-панель.</p>
+                <p>Добро пожаловать в панель администратора.</p>
             </main>
         </div>
     </div>
