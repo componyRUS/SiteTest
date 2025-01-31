@@ -2,8 +2,8 @@
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-require_once 'include/header.php';
 require_once 'include/db_connect.php';
+
 
 // Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['userid'])) {
@@ -12,7 +12,8 @@ if (!isset($_SESSION['userid'])) {
     exit();
 }
 
-$userId = $_SESSION['userid'];
+
+require_once 'include/header.php';
 
 // Функция для перевода статуса на русский
 function translateStatus($status) {
@@ -29,6 +30,8 @@ function translateStatus($status) {
             return $status; // Возвращаем исходный статус, если нет перевода
     }
 }
+
+$userId = $_SESSION['userid'];
 
 // Запрос на получение заказов текущего пользователя
 $sql = "SELECT o.order_id, o.order_date, o.total_amount, o.payment_method, o.notes, o.status, o.ContactNumber,
@@ -51,19 +54,7 @@ $orders = $result->fetch_all(MYSQLI_ASSOC);
 
     <?php if (!empty($orders)): ?>
         <table class="table">
-            <thead>
-                <tr>
-                    <th>Номер заказа</th>
-                    <th>Что входит</th>
-                    <th>Сумма</th>
-                    <th>Время заказа</th>
-                     <th>Контактный телефон</th>
-                    <th>Метод оплаты</th>
-                    <th>Заметки</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
-            <tbody>
+                        <tbody>
                 <?php foreach ($orders as $order): ?>
                     <tr>
                         <td><?= htmlspecialchars($order['order_id']) ?></td>
