@@ -110,7 +110,7 @@
                 </svg>
                 <div>
                     <span class="fs-4 "> Плюшевый</span>
-                    <span class="fs-6"> - Интернет-магазин игрушек</span>
+                    <span class="fs-6"> - Интернет-магазин детских игрушек</span>
                 </div>
             </a>
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-3" role="search" action="search.php" method="GET">
@@ -140,7 +140,7 @@
     <nav class="py-2 border-bottom bg-body-tertiary">
         <div class="container d-flex flex-wrap justify-content-left">
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 link-dark">Все товары</a></li>
+                <li><a href="index.php" class="nav-link px-2 link-dark">Все товары</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link px-2 link-dark dropdown-toggle" href="#" id="categoriesDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
