@@ -10,6 +10,16 @@
                                 Категории
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="comments.php">
+                                Комментарии
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="orders.php">
+                                Заказы
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>

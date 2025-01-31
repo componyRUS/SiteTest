@@ -1,5 +1,12 @@
 <?php
 require_once 'admin_functions.php';
+
+// проверка авторизации
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header("Location: login.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">

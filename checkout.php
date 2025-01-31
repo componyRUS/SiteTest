@@ -59,10 +59,10 @@ if (!isset($_SESSION['FIO'])) {
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card">
+                <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Контактная информация</h4>
-                             <form method="POST" action="process_order.php">
+                             <form method="POST" action="process_order.php" id="checkoutForm">
                                 <div class="mb-3">
                                     <label for="userName" class="form-label">ФИО:</label>
                                     <input type="text" class="form-control" id="userName" name="userName" value="<?php echo htmlspecialchars($_SESSION['FIO']) ?>" required>
@@ -72,12 +72,17 @@ if (!isset($_SESSION['FIO'])) {
                                   <input type="email" class="form-control" id="userEmail" name="userEmail" value="<?php echo htmlspecialchars($_SESSION['Email']) ?>" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="userPhone" class="form-label">Телефон:</label>
+                                    <label for="userPhone" class="form-label">Контактный:</label>
                                     <input type="text" class="form-control" id="userPhone" name="userPhone" required>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="userAddress" class="form-label">Адрес доставки:</label>
-                                    <input type="text" class="form-control" id="userAddress" name="userAddress" required>
+                                 <div class="mb-3">
+                                 <label for="notes" class="form-label">Примечание:</label>
+                                 <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                                 <div class="mb-3">
+                                    <label for="payment_method" class="form-label">Метод оплаты:</label>
+                                    <select class="form-control" id="payment_method" name="payment_method" >
+                                        <option value="upon_receipt">При получении</option>
+                                    </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">Подтвердить заказ</button>
                             </form>

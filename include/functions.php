@@ -3,7 +3,7 @@ require_once 'db_connect.php';
 
 function getProducts($search = '', $sort = '', $categoryFilter = 0) {
     global $conn;
-    $sql = "SELECT ProductId, ProductName, Price, Description, CategoryId, img1 FROM Products WHERE 1=1";
+    $sql = "SELECT ProductId, ProductName, Price, Description, CategoryId, img1, Width, Height, Length FROM Products WHERE 1=1";
 
     if (!empty($search)) {
         $sql .= " AND ProductName LIKE ?";

@@ -23,6 +23,7 @@
             </ul>
             <ul class="nav">
                 <?php if (isset($_SESSION['FIO'])) {  ?>
+                    <li class="nav-item"><a href="order_list.php" class="nav-link link-body-emphasis px-2">Заказы</a></li>
                     <li class="nav-item"><a href="profile.php" class="nav-link link-body-emphasis px-2">Добро пожаловать, <?php echo $_SESSION['FIO']; ?></a></li>
                     <li class="nav-item"><a href="logout.php" class="nav-link link-body-emphasis px-2">Выйти</a></li>
                 <?php } else { ?>
@@ -30,7 +31,8 @@
                     <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2" data-bs-toggle="modal" data-bs-target="#regModal">Регистрация</a></li>
                 <?php } ?>
             </ul>
-            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center">Смена темы:</div>
+            <div class="form-check form-switch d-flex align-items-center justify-content-center">            
                 <input class="form-check-input" type="checkbox" role="switch" id="theme-switcher" checked>
             </div>
         </div>

@@ -13,21 +13,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 
 // Проверка, есть ли параметр id в запросе
 if (isset($_GET['id'])) {
-    $categoryId = (int)$_GET['id']; // Преобразование в целое число
+    $commentId = (int)$_GET['id']; // Преобразование в целое число
 
     // Проверка на корректность ID
-    if ($categoryId > 0) {
+    if ($commentId > 0) {
         // Удаление категории
-        if (deleteCategory($categoryId)) {
-            header("Location: categories.php?delete=success");
+        if (deleteProductComment($commentId)) {
+            header("Location: comments.php?delete=success");
             exit();
         } else {
-            echo "<p style='color:red;'>Ошибка: Не удалось удалить категорию.</p>";
+            echo "<p style='color:red;'>Ошибка: Не удалось удалить комментарий.</p>";
         }
     } else {
-        echo "<p style='color:red;'>Некорректный ID категории.</p>";
+        echo "<p style='color:red;'>Некорректный ID комментария.</p>";
     }
 } else {
-    echo "<p style='color:red;'>ID категории не указан.</p>";
+    echo "<p style='color:red;'>ID комментария не указан.</p>";
 }
 ?>

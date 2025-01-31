@@ -35,13 +35,13 @@ if (isset($_GET['error'])) {
 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="" class="d-block w-100" alt="Slide 1">
+            <img src="uploads/img/600x400@2x.png" class="d-block w-100" alt="Slide 1">
         </div>
         <div class="carousel-item">
-            <img src="" class="d-block w-100" alt="Slide 2">
+            <img src="uploads/img/600x400@2x.png" class="d-block w-100" alt="Slide 2">
         </div>
         <div class="carousel-item">
-            <img src="" class="d-block w-100" alt="Slide 3">
+            <img src="uploads/img/600x400@2x.png" class="d-block w-100" alt="Slide 3">
         </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
@@ -70,7 +70,7 @@ if (isset($_GET['error'])) {
                 echo '<div class="col-md-4 mb-4 product-item" data-price="' . htmlspecialchars($product['Price']) . '">';
                 echo '<div class="card h-100">';
                 echo '<a href="product.php?id=' . htmlspecialchars($product['ProductId']) . '">';
-                echo '<img src="" class="card-img-top" alt="' . htmlspecialchars($product['ProductName']) . '" style="height: 200px; object-fit: cover;">';
+                echo '<img src="/uploads/img/' . htmlspecialchars($product['img1']) . '" class="card-img-top" alt="' . htmlspecialchars($product['ProductName']) . '" style="height: 200px; object-fit: cover;">';
                 echo '</a>';
                 echo '<div class="card-body">';
                 echo '<h5 class="card-title">' . htmlspecialchars($product['ProductName']) . '</h5>';

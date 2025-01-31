@@ -186,4 +186,105 @@ function authenticateUser($email, $password) {
     }
     return false;
 }
+function getAllProductComments() {
+    global $conn;
+    $sql = "SELECT pc.CommentId, pc.ProductId, pc.UserId, pc.CommentText, pc.CommentDate,
+                   p.ProductName, u.FIO
+            FROM ProductComments pc
+            INNER JOIN Products p ON pc.ProductId = p.ProductId
+            INNER JOIN users u ON pc.UserId = u.UserId
+            ORDER BY pc.CommentId DESC";
+    $result = $conn->query($sql);
+    if ($result === false) {
+        error_log("Ошибка при получении комментариев: " . $conn->error);
+        return false;
+    }
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function deleteProductComment($commentId) {
+    global $conn;
+    $sql = "DELETE FROM ProductComments WHERE CommentId = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        error_log("Ошибка при подготовке запроса deleteProductComment: " . $conn->error);
+        return false;
+    }
+    $stmt->bind_param("i", $commentId);
+    if (!$stmt->execute()) {
+        error_log("Ошибка при выполнении запроса deleteProductComment: " . $conn->error);
+        return false;
+    }
+    return $stmt->affected_rows > 0;
+}
+function getAllOrders() {
+    global $conn;
+    $sql = "SELECT o.order_id, o.order_date, o.total_amount, o.payment_method, o.notes, o.status, o.ContactNumber,
+                   GROUP_CONCAT(CONCAT(oi.product_name, ' (', oi.quantity, ')') SEPARATOR ', ') AS product_names,
+                    u.FIO
+            FROM orders o
+            LEFT JOIN order_items oi ON o.order_id = oi.order_id
+            LEFT JOIN users u ON o.user_id = u.UserId
+            GROUP BY o.order_id
+            ORDER BY o.order_date DESC";
+    $result = $conn->query($sql);
+    if ($result === false) {
+        error_log("Ошибка при получении всех заказов: " . $conn->error);
+        return false;
+    }
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function getOrderById($orderId) {
+    global $conn;
+    $sql = "SELECT o.order_id, o.order_date, o.total_amount, o.payment_method, o.notes, o.status, o.ContactNumber,
+                    u.FIO
+            FROM orders o
+            LEFT JOIN users u ON o.user_id = u.UserId
+            WHERE o.order_id = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        error_log("Ошибка при подготовке запроса getOrderById: " . $conn->error);
+        return false;
+    }
+    $stmt->bind_param("i", $orderId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result === false) {
+         error_log("Ошибка при получении заказа по ID: " . $conn->error);
+         return false;
+     }
+    return $result->fetch_assoc();
+}
+function updateOrderStatus($orderId, $newStatus) {
+    global $conn;
+    $sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+    $stmt = $conn->prepare($sql);
+     if (!$stmt) {
+        error_log("Ошибка при подготовке запроса updateOrderStatus: " . $conn->error);
+        return false;
+    }
+    $stmt->bind_param("si", $newStatus, $orderId);
+    if (!$stmt->execute()) {
+       error_log("Ошибка при выполнении запроса updateOrderStatus: " . $stmt->error);
+        return false;
+    }
+    return $stmt->affected_rows > 0;
+}
+
+function deleteOrder($orderId) {
+    global $conn;
+    $sql = "DELETE FROM orders WHERE order_id = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+         error_log("Ошибка при подготовке запроса deleteOrder: " . $conn->error);
+         return false;
+     }
+    $stmt->bind_param("i", $orderId);
+    if (!$stmt->execute()) {
+         error_log("Ошибка при выполнении запроса deleteOrder: " . $conn->error);
+         return false;
+     }
+    return $stmt->affected_rows > 0;
+}
 ?>

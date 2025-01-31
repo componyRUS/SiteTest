@@ -14,30 +14,62 @@ if (!isset($_SESSION['FIO'])) {
 $userName = isset($_POST['userName']) ? htmlspecialchars($_POST['userName']) : "";
 $userEmail = isset($_POST['userEmail']) ? htmlspecialchars($_POST['userEmail']) : "";
 $userPhone = isset($_POST['userPhone']) ? htmlspecialchars($_POST['userPhone']) : "";
-$userAddress = isset($_POST['userAddress']) ? htmlspecialchars($_POST['userAddress']) : "";
-
+$notes = isset($_POST['notes']) ? htmlspecialchars($_POST['notes']) : "";
+$userId = $_SESSION['userid'] ?? null;
 
 // Получаем товары из корзины
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 
-// Добавление записей в таблицу Transactions
-foreach ($cart as $productId => $item) {
-    $sql = "INSERT INTO Transactions (ProductId) VALUES (?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $productId);
+$totalAmount = 0;
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $item) {
+        $totalAmount += $item['price'] * $item['quantity'];
+    }
+} else {
+    echo "Ошибка при подсчёте. Пожалуйста, попробуйте позже";
+     exit();
+}
 
-      if ($stmt->execute() === false) {
-        error_log("Ошибка при добавлении транзакции: " . $stmt->error);
-        echo "Ошибка при оформлении заказа. Пожалуйста, попробуйте позже";
-        exit;
-       }
-      $stmt->close();
+// Добавление записей в таблицу orders
+$sql_order = "INSERT INTO orders (user_id, total_amount, notes, ContactNumber) VALUES (?, ?, ?, ?)";
+$stmt_order = $conn->prepare($sql_order);
+$stmt_order->bind_param("idss", $userId, $totalAmount, $notes, $userPhone);
+if ($stmt_order->execute() === false) {
+    error_log("Ошибка при выполнении запроса INSERT INTO orders: " . $stmt_order->error);
+    echo "Ошибка при оформлении заказа. Пожалуйста, попробуйте позже";
+    exit();
+}
+// Получаем order_id
+$orderId = $conn->insert_id;
+    if(!$orderId){
+        error_log("Ошибка: Не удалось получить id нового заказа");
+            header("Location: index.php?error=order_fail");
+        exit();
+    }
+$stmt_order->close();
+
+// Добавление записей в таблицу order_items
+foreach ($_SESSION['cart'] as $productId => $item) {
+    $sql_items = "INSERT INTO order_items (order_id, product_name, quantity, price) VALUES (?, ?, ?, ?)";
+    $stmt_items = $conn->prepare($sql_items);
+
+    if (!$stmt_items) {
+        error_log("Ошибка подготовки запроса INSERT INTO order_items: " . $conn->error);
+        echo "Ошибка при оформлении order_items";
+        exit();
+    }
+    $stmt_items->bind_param("isid", $orderId, $item['name'], $item['quantity'], $item['price']);
+
+    if (!$stmt_items->execute()) {
+        error_log("Ошибка выполнения запроса INSERT INTO order_items: " . $stmt_items->error);
+        echo "Ошибка при оформлении order_items 2";
+        exit();
+    }
+ $stmt_items->close();
 }
 
 
-// Выводим сообщение об успехе
 ?>
-
 <?php require_once 'include/header.php'; ?>
 <div class="container mt-5">
   <div class="alert alert-success" role="alert">
@@ -82,7 +114,7 @@ foreach ($cart as $productId => $item) {
        </div>
 </div>
 <?php
-// Очищаем корзину
+// Очищение корзины
 unset($_SESSION['cart']);
 require_once 'include/footer.php';
 $conn->close();
